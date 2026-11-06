@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#10111b">
+<title>WaveBridge Addon</title>
+
+<style>
+:root {
+  --bg: #10111b;
+  --panel: #191b29;
+  --panel2: #222538;
+  --text: #f4f5ff;
+  --muted: #9298ae;
+  --accent: #8b72ff;
+  --green: #39d99a;
+  --border: #303348;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Arial, sans-serif;
+}
+header {
+  padding: 22px 18px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.logo {
+  width: 42px;
+  height: 42px;
+  border-radius: 13px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg,#9275ff,#40c9d9);
+  font-size: 23px;
+}
+header h2 { margin: 0; font-size: 19px; }
+header p { margin: 4px 0 0; color: var(--muted); font-size: 12px; }
+.container {
+  max-width: 850px;
+  margin: auto;
+  padding: 20px 15px 45px;
+}
+.hero {
+  padding: 22px;
+  border-radius: 18px;
+  background: linear-gradient(135deg,#29244c,#192b3d);
+  margin-bottom: 20px;
+}
+.hero h1 { margin: 0 0 8px; font-size: 25px; }
+.hero p { margin: 0; color: #c3c5d8; line-height: 1.6; }
+.status {
+  display: inline-block;
+  margin-top: 15px;
+  padding: 6px 10px;
+  border-radius: 20px;
+  background: #174b3c;
+  color: #75efbd;
+  font-size: 11px;
+}
+.tabs {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 12px;
+}
+.tab {
+  flex: 0 0 auto;
+  padding: 11px 15px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  color: var(--muted);
+  border-radius: 10px;
+  cursor: pointer;
+}
+.tab.active {
+  color: white;
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 15px;
+  padding: 18px;
+  margin-bottom: 14px;
+}
+.panel h3 { margin: 0 0 15px; font-size: 16px; }
+.panel p {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+.field { margin: 14px 0; }
+.field label {
+  display: block;
+  margin-bottom: 7px;
+  font-size: 13px;
+  color: #c6c9dc;
+}
+input, select, textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: var(--panel2);
+  color: white;
+  outline: none;
+}
+input:focus, select:focus, textarea:focus {
+  border-color: var(--accent);
+}
+.provider {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  background: var(--panel2);
+  border: 1px solid var(--border);
+  padding: 14px;
+  border-radius: 11px;
+  margin: 10px 0;
+}
+.provider strong { font-size: 14px; }
+.provider small {
+  display: block;
+  color: var(--muted);
+  margin-top: 5px;
+}
+.switch {
+  width: 44px;
+  height: 24px;
+  accent-color: var(--accent);
+  flex-shrink: 0;
+}
+.btn {
+  padding: 12px 15px;
+  border: 0;
+  border-radius: 9px;
+  background: var(--accent);
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+.btn.secondary {
+  background: var(--panel2);
+  border: 1px solid var(--border);
+}
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin-top: 14px;
+}
+.hidden { display: none; }
+.note {
+  border-left: 3px solid var(--accent);
+  padding: 10px 12px;
+  background: var(--panel2);
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.6;
+  border-radius: 5px;
+}
+footer {
+  text-align: center;
+  padding: 25px;
+  color: var(--muted);
+  font-size: 12px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">♫</div>
+  <div>
+    <h2>WaveBridge</h2>
+    <p>Multi-Provider Music Addon</p>
+  </div>
+</header>
+
+<main class="container">
+
+<section class="hero">
+  <h1>WaveBridge Dashboard</h1>
+  <p>Kelola konfigurasi provider musik dalam satu tempat.</p>
+  <span class="status">● Configuration Ready</span>
+</section>
+
+<nav class="tabs">
+  <button class="tab active" data-tab="general">General</button>
+  <button class="tab" data-tab="providers">Providers</button>
+  <button class="tab" data-tab="sources">Sources</button>
+  <button class="tab" data-tab="advanced">Advanced</button>
+</nav>
+
+<!-- GENERAL -->
+<section id="general" class="page">
+  <div class="panel">
+    <h3>General Settings</h3>
+
+    <div class="field">
+      <label>Addon Name</label>
+      <input id="addonName" value="WaveBridge Multi-Provider">
+    </div>
+
+    <div class="field">
+      <label>Addon Description</label>
+      <input id="description" value="Legal Multi-Provider Music Integration">
+    </div>
+
+    <div class="field">
+      <label>Addon Version</label>
+      <input id="version" value="1.0.0">
+    </div>
+
+    <div class="note">
+      Pengaturan ini merupakan konfigurasi website.
+      Belum menjadi manifest resmi LastWave atau BitChord.
+    </div>
+  </div>
+</section>
+
+<!-- PROVIDERS -->
+<section id="providers" class="page hidden">
+  <div class="panel">
+    <h3>Music Providers</h3>
+    <p>Aktifkan sumber yang nantinya akan diintegrasikan melalui API resmi.</p>
+
+    <div class="provider">
+      <div>
+        <strong>Jamendo</strong>
+        <small>Independent music catalog · API integration pending</small>
+      </div>
+      <input class="switch" type="checkbox" id="jamendo">
+    </div>
+
+    <div class="provider">
+      <div>
+        <strong>Internet Archive</strong>
+        <small>Audio collections · Rights verification required</small>
+      </div>
+      <input class="switch" type="checkbox" id="archive">
+    </div>
+
+    <div class="provider">
+      <div>
+        <strong>Custom Legal API</strong>
+        <small>API milik sendiri atau provider berizin</small>
+      </div>
+      <input class="switch" type="checkbox" id="custom">
+    </div>
+
+    <div class="field">
+      <label>Custom API URL</label>
+      <input id="customUrl" placeholder="https://api.example.com">
+    </div>
+
+    <div class="note">
+      Status aktif di sini hanya menyimpan pilihan konfigurasi.
+      Koneksi API belum diimplementasikan.
+    </div>
+  </div>
+</section>
+
+<!-- SOURCES -->
+<section id="sources" class="page hidden">
+  <div class="panel">
+    <h3>Source Priority</h3>
+    <p>Pilih provider utama yang akan diprioritaskan.</p>
+
+    <div class="field">
+      <label>Primary Provider</label>
+      <select id="primary">
+        <option value="jamendo">Jamendo</option>
+        <option value="archive">Internet Archive</option>
+        <option value="custom">Custom Legal API</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>Fallback Provider</label>
+      <select id="fallback">
+        <option value="archive">Internet Archive</option>
+        <option value="jamendo">Jamendo</option>
+        <option value="custom">Custom Legal API</option>
+      </select>
+    </div>
+  </div>
+</section>
+
+<!-- ADVANCED -->
+<section id="advanced" class="page hidden">
+  <div class="panel">
+    <h3>Advanced Settings</h3>
+
+    <div class="field">
+      <label>Cache Duration (minutes)</label>
+      <input type="number" id="cache" value="30" min="0">
+    </div>
+
+    <div class="field">
+      <label>Request Timeout (seconds)</label>
+      <input type="number" id="timeout" value="15" min="1">
+    </div>
+
+    <div class="field">
+      <label>Configuration URL</label>
+      <input id="configUrl" readonly placeholder="Belum dibuat">
+    </div>
+
+    <div class="actions">
+      <button class="btn" onclick="generateUrl()">Generate URL</button>
+      <button class="btn secondary" onclick="copyUrl()">Copy URL</button>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h3>Import / Export</h3>
+    <div class="actions">
+      <button class="btn" onclick="exportConfig()">Export JSON</button>
+      <button class="btn secondary" onclick="document.getElementById('importFile').click()">Import JSON</button>
+    </div>
+    <input type="file" id="importFile" accept=".json,application/json" hidden>
+  </div>
+</section>
+
+<div class="panel">
+  <h3>Save Configuration</h3>
+  <p>Simpan pengaturan website pada browser perangkat ini.</p>
+  <div class="actions">
+    <button class="btn" onclick="saveConfig()">Save Settings</button>
+    <button class="btn secondary" onclick="loadConfig()">Load Settings</button>
+    <button class="btn secondary" onclick="resetConfig()">Reset</button>
+  </div>
+</div>
+
+<footer>
+  WaveBridge Addon · Version 1.0.0<br>
+  Independent project · Legal audio integration
+</footer>
+
+</main>
+
+<script>
+const fields = [
+  "addonName", "description", "version",
+  "jamendo", "archive", "custom", "customUrl",
+  "primary", "fallback", "cache", "timeout"
+];
+
+function getConfig() {
+  const config = {};
+
+  fields.forEach(id => {
+    const el = document.getElementById(id);
+    config[id] = el.type === "checkbox"
+      ? el.checked
+      : el.value;
+  });
+
+  config.project = "WaveBridge";
+  config.configVersion = 1;
+
+  return config;
+}
+
+function applyConfig(config) {
+  fields.forEach(id => {
+    const el = document.getElementById(id);
+    if (!el || config[id] === undefined) return;
+
+    if (el.type === "checkbox") {
+      el.checked = Boolean(config[id]);
+    } else {
+      el.value = config[id];
+    }
+  });
+}
+
+function saveConfig() {
+  localStorage.setItem(
+    "wavebridgeConfig",
+    JSON.stringify(getConfig())
+  );
+  alert("Konfigurasi berhasil disimpan.");
+}
+
+function loadConfig() {
+  const data = localStorage.getItem("wavebridgeConfig");
+
+  if (!data) {
+    alert("Belum ada konfigurasi tersimpan.");
+    return;
+  }
+
+  try {
+    applyConfig(JSON.parse(data));
+    alert("Konfigurasi berhasil dimuat.");
+  } catch {
+    alert("File konfigurasi tidak valid.");
+  }
+}
+
+function resetConfig() {
+  if (!confirm("Reset semua pengaturan?")) return;
+  localStorage.removeItem("wavebridgeConfig");
+  location.reload();
+}
+
+function exportConfig() {
+  const data = JSON.stringify(getConfig(), null, 2);
+  const blob = new Blob([data], {
+    type: "application/json"
+  });
+
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+
+  a.href = url;
+  a.download = "wavebridge-config.json";
+  a.click();
+
+  URL.revokeObjectURL(url);
+}
+
+document.getElementById("importFile")
+.addEventListener("change", async event => {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  try {
+    const config = JSON.parse(await file.text());
+
+    if (config.project !== "WaveBridge" ||
+        config.configVersion !== 1) {
+      throw new Error("Format tidak cocok");
+    }
+
+    applyConfig(config);
+    saveConfig();
+  } catch {
+    alert("JSON tidak valid atau bukan konfigurasi WaveBridge.");
+  }
+
+  event.target.value = "";
+});
+
+function generateUrl() {
+  const json = JSON.stringify(getConfig());
+
+  const encoded = btoa(
+    unescape(encodeURIComponent(json))
+  );
+
+  const url = new URL(location.href);
+  url.searchParams.set("config", encoded);
+
+  document.getElementById("configUrl").value = url.href;
+}
+
+function copyUrl() {
+  const value = document.getElementById("configUrl").value;
+
+  if (!value) {
+    alert("Generate URL terlebih dahulu.");
+    return;
+  }
+
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(value)
+      .then(() => alert("URL berhasil disalin."))
+      .catch(() => alert("Gagal menyalin URL."));
+  } else {
+    document.getElementById("configUrl").select();
+    alert("Salin URL secara manual.");
+  }
+}
+
+function showTab(name) {
+  document.querySelectorAll(".page").forEach(page => {
+    page.classList.toggle("hidden", page.id !== name);
+  });
+
+  document.querySelectorAll(".tab").forEach(tab => {
+    tab.classList.toggle(
+      "active",
+      tab.dataset.tab === name
+    );
+  });
+}
+
+document.querySelectorAll(".tab").forEach(tab => {
+  tab.addEventListener("click", () => {
+    showTab(tab.dataset.tab);
+  });
+});
+
+// Load shared configuration from URL.
+try {
+  const params = new URLSearchParams(location.search);
+  const encoded = params.get("config");
+
+  if (encoded) {
+    const json = decodeURIComponent(
+      escape(atob(encoded))
+    );
+    const config = JSON.parse(json);
+
+    if (config.project === "WaveBridge" &&
+        config.configVersion === 1) {
+      applyConfig(config);
+    }
+  } else {
+    loadInitialConfig();
+  }
+} catch {
+  alert("Konfigurasi URL tidak valid.");
+}
+
+function loadInitialConfig() {
+  const saved = localStorage.getItem("wavebridgeConfig");
+  if (saved) {
+    try {
+      applyConfig(JSON.parse(saved));
+    } catch {
+      console.warn("Saved configuration invalid.");
+    }
+  }
+}
+</script>
+
+</body>
+</html>
